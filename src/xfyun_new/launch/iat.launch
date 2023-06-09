@@ -1,0 +1,5 @@
+<launch>
+
+	<node name="voiceRecognition" pkg="xfyun_new" type="iat_publish" output="screen"/>
+
+</launch>

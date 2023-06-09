@@ -1,0 +1,2 @@
+set(Thus_g5_MESSAGE_FILES "")
+set(Thus_g5_SERVICE_FILES "/home/robot/catkin_ws/src/Thus_g5/srv/vel_ctrl.srv;/home/robot/catkin_ws/src/Thus_g5/srv/waypoint.srv;/home/robot/catkin_ws/src/Thus_g5/srv/nav_goal.srv;/home/robot/catkin_ws/src/Thus_g5/srv/create_map.srv;/home/robot/catkin_ws/src/Thus_g5/srv/waypoint.srv;/home/robot/catkin_ws/src/Thus_g5/srv/modify_waypoint.srv;/home/robot/catkin_ws/src/Thus_g5/srv/grab_object.srv")

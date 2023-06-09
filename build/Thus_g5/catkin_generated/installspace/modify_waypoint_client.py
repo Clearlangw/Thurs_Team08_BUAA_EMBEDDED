@@ -1,0 +1,26 @@
+#!/usr/bin/env python2
+
+from __future__ import print_function
+import sys
+import traceback
+import rospy
+from Thus_g5.srv import *
+
+def modify_waypoint_client(*args):
+    rospy.wait_for_service('modify_waypoint')
+    try:
+        service = rospy.ServiceProxy('modify_waypoint', modify_waypoint)
+        res = service(**{
+            "op": int(args[0]),
+            "name": str(args[1]),
+
+        })
+        return res
+    except rospy.ServiceException as e:
+        print(traceback.format_exc())
+        print("Service call failed 99: %s"%e)
+
+if __name__ == "__main__":
+    res = modify_waypoint_client(*sys.argv[1:])
+    print(res)
+    

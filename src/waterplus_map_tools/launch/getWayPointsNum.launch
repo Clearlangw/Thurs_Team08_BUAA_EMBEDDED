@@ -1,0 +1,13 @@
+<launch>
+
+
+  <!-- Map tools  -->
+  <node pkg="waterplus_map_tools" type="wp_manager" name="wp_manager" output="screen">
+    <param name="load" type="string" value="$(arg indexPath)"/> 
+  </node>
+
+
+  <!-- nav-test -->
+  <node pkg="waterplus_map_tools" type="getWayPointsNum" name="getWayPointsNum" output="screen"/>
+
+</launch>

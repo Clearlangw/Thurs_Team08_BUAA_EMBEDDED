@@ -1,0 +1,5 @@
+<launch>
+
+  <node pkg="waterplus_map_tools" type="main_ctrl" name="main_ctrl" output="screen"/>
+  
+</launch>

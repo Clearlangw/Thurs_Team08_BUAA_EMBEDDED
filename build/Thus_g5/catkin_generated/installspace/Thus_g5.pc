@@ -1,0 +1,8 @@
+prefix=/home/robot/catkin_ws/install
+
+Name: Thus_g5
+Description: Description of Thus_g5
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib -lThus_g5
+Requires: message_runtime

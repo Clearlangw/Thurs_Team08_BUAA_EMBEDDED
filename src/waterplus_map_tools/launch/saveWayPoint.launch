@@ -1,0 +1,8 @@
+<launch>
+
+  <node pkg="waterplus_map_tools" type="wp_saver" name="wp_saver" output="screen">
+	<param name="indexPath" type="string" value="$(arg indexPath)"/>
+  </node>
+
+
+</launch>

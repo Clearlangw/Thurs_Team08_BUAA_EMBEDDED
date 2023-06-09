@@ -1,0 +1,119 @@
+; Auto-generated. Do not edit!
+
+
+(cl:in-package waterplus_map_tools-msg)
+
+
+;//! \htmlinclude positionMsg.msg.html
+
+(cl:defclass <positionMsg> (roslisp-msg-protocol:ros-message)
+  ((x
+    :reader x
+    :initarg :x
+    :type cl:float
+    :initform 0.0)
+   (y
+    :reader y
+    :initarg :y
+    :type cl:float
+    :initform 0.0)
+   (w
+    :reader w
+    :initarg :w
+    :type cl:float
+    :initform 0.0))
+)
+
+(cl:defclass positionMsg (<positionMsg>)
+  ())
+
+(cl:defmethod cl:initialize-instance :after ((m <positionMsg>) cl:&rest args)
+  (cl:declare (cl:ignorable args))
+  (cl:unless (cl:typep m 'positionMsg)
+    (roslisp-msg-protocol:msg-deprecation-warning "using old message class name waterplus_map_tools-msg:<positionMsg> is deprecated: use waterplus_map_tools-msg:positionMsg instead.")))
+
+(cl:ensure-generic-function 'x-val :lambda-list '(m))
+(cl:defmethod x-val ((m <positionMsg>))
+  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader waterplus_map_tools-msg:x-val is deprecated.  Use waterplus_map_tools-msg:x instead.")
+  (x m))
+
+(cl:ensure-generic-function 'y-val :lambda-list '(m))
+(cl:defmethod y-val ((m <positionMsg>))
+  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader waterplus_map_tools-msg:y-val is deprecated.  Use waterplus_map_tools-msg:y instead.")
+  (y m))
+
+(cl:ensure-generic-function 'w-val :lambda-list '(m))
+(cl:defmethod w-val ((m <positionMsg>))
+  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader waterplus_map_tools-msg:w-val is deprecated.  Use waterplus_map_tools-msg:w instead.")
+  (w m))
+(cl:defmethod roslisp-msg-protocol:serialize ((msg <positionMsg>) ostream)
+  "Serializes a message object of type '<positionMsg>"
+  (cl:let ((bits (roslisp-utils:encode-single-float-bits (cl:slot-value msg 'x))))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream))
+  (cl:let ((bits (roslisp-utils:encode-single-float-bits (cl:slot-value msg 'y))))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream))
+  (cl:let ((bits (roslisp-utils:encode-single-float-bits (cl:slot-value msg 'w))))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream))
+)
+(cl:defmethod roslisp-msg-protocol:deserialize ((msg <positionMsg>) istream)
+  "Deserializes a message object of type '<positionMsg>"
+    (cl:let ((bits 0))
+      (cl:setf (cl:ldb (cl:byte 8 0) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 8) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 16) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 24) bits) (cl:read-byte istream))
+    (cl:setf (cl:slot-value msg 'x) (roslisp-utils:decode-single-float-bits bits)))
+    (cl:let ((bits 0))
+      (cl:setf (cl:ldb (cl:byte 8 0) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 8) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 16) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 24) bits) (cl:read-byte istream))
+    (cl:setf (cl:slot-value msg 'y) (roslisp-utils:decode-single-float-bits bits)))
+    (cl:let ((bits 0))
+      (cl:setf (cl:ldb (cl:byte 8 0) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 8) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 16) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 24) bits) (cl:read-byte istream))
+    (cl:setf (cl:slot-value msg 'w) (roslisp-utils:decode-single-float-bits bits)))
+  msg
+)
+(cl:defmethod roslisp-msg-protocol:ros-datatype ((msg (cl:eql '<positionMsg>)))
+  "Returns string type for a message object of type '<positionMsg>"
+  "waterplus_map_tools/positionMsg")
+(cl:defmethod roslisp-msg-protocol:ros-datatype ((msg (cl:eql 'positionMsg)))
+  "Returns string type for a message object of type 'positionMsg"
+  "waterplus_map_tools/positionMsg")
+(cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<positionMsg>)))
+  "Returns md5sum for a message object of type '<positionMsg>"
+  "fc16a6b45aaa44f2dd9023be467748ee")
+(cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'positionMsg)))
+  "Returns md5sum for a message object of type 'positionMsg"
+  "fc16a6b45aaa44f2dd9023be467748ee")
+(cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<positionMsg>)))
+  "Returns full string definition for message of type '<positionMsg>"
+  (cl:format cl:nil "float32 x~%float32 y~%float32 w~%~%~%"))
+(cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'positionMsg)))
+  "Returns full string definition for message of type 'positionMsg"
+  (cl:format cl:nil "float32 x~%float32 y~%float32 w~%~%~%"))
+(cl:defmethod roslisp-msg-protocol:serialization-length ((msg <positionMsg>))
+  (cl:+ 0
+     4
+     4
+     4
+))
+(cl:defmethod roslisp-msg-protocol:ros-message-to-list ((msg <positionMsg>))
+  "Converts a ROS message object to a list"
+  (cl:list 'positionMsg
+    (cl:cons ':x (x msg))
+    (cl:cons ':y (y msg))
+    (cl:cons ':w (w msg))
+))

@@ -1,0 +1,72 @@
+#!/usr/bin/env python
+
+from __future__ import print_function
+import rospy
+from Thus_g5.srv import *
+from tf_conversions import transformations
+from math import pi
+import tf
+
+class Robot:
+    def __init__(self):
+        self.tf_listener = tf.TransformListener()
+        try:
+            self.tf_listener.waitForTransform('/map', '/base_link', rospy.Time(), rospy.Duration(1.0))
+        except (tf.Exception, tf.ConnectivityException, tf.LookupException):
+            return
+
+    def get_pos(self):
+        try:
+            (trans, rot) = self.tf_listener.lookupTransform('/map', '/base_link', rospy.Time(0))
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+            rospy.loginfo("tf Error")
+            return None
+        euler = transformations.euler_from_quaternion(rot)
+        #print euler[2] / pi * 180
+
+        x = trans[0]
+        y = trans[1]
+        th = euler[2] / pi * 180
+        return (x, y, rot, th)
+
+rospy.init_node("modify_waypoint_server")
+robot = Robot()
+
+def modify(req):
+    rospy.wait_for_service('waypoint')
+    name = req.name
+    op = req.op
+    if op == 1:
+        try:
+            service = rospy.ServiceProxy('waypoint', waypoint)
+            x, y, rot, th = robot.get_pos()
+            res = service(**{
+                "op": 1,
+                "name": name,
+                "pos_x": x,
+                "pos_y": y,
+                "ori_z": rot[2],
+                "ori_w": rot[3],
+            })
+            return modify_waypointResponse(flag=res.flag, x=x, y=y, th=th)
+        except rospy.ServiceException as e:
+            print("Service call failed: %s"%e)
+    elif op == 0:
+        try:
+            service = rospy.ServiceProxy('waypoint', waypoint)
+            res = service(**{
+                "op": 0,
+                "name": name,
+                "pos_x": 0,
+                "pos_y": 0,
+                "ori_z": 0,
+                "ori_w": 0,
+            })
+            return modify_waypointResponse(flag=res.flag, x=0, y=0, th=0)
+        except rospy.ServiceException as e:
+            print("Service call failed: %s"%e)
+    return modify_waypointResponse(flag=0, x=0, y=0, th=0)
+
+if __name__ == "__main__":
+    s = rospy.Service('modify_waypoint', modify_waypoint, modify)
+    rospy.spin()
