@@ -8,10 +8,10 @@ int main(int argc, char** argv)
 
     ros::NodeHandle nh;
     tf::TransformListener listener;
-  //  ros::Publisher position_pub = nh.advertise<geometry_msgs::Point>("robot_position", 10);
-    //����Ϊrobot_position 
+    ros::Publisher bridge_pub = nh.advertise<waterplus_map_tools::positionMsg>("realtime_pos", 1);
 
-    ros::Rate rate(1); // ���ƽڵ�����Ƶ�ʣ���������Ϊ1Hz
+
+    ros::Rate rate(1);
 
     while (ros::ok())
     {
@@ -19,7 +19,6 @@ int main(int argc, char** argv)
 
         try
         {
-            // ��ȡ�������� "map" ����ϵ�е�λ��
             listener.waitForTransform("map", "base_link", ros::Time(0), ros::Duration(3.0));
             listener.lookupTransform("map", "base_link", ros::Time(0), transform);
         }
@@ -29,33 +28,22 @@ int main(int argc, char** argv)
             continue;
         }
 
-        // ��ȡλ����Ϣ
+
         double x = transform.getOrigin().x();
         double y = transform.getOrigin().y();
-        double w = tf::getYaw(transform.getRotation());
+        double roll,pitch,yaw;
+        tf::Matrix3x3(transform.getRotation()).getRPY(roll,pitch,yaw);
+        //double w = tf::getYaw(transform.getRotation());
 
-        ROS_INFO("Robot position: x=%.2f, y=%.2f, w=%.2f", x, y, w);
+        ROS_INFO("Robot position: x=%.2f, y=%.2f, w=%.2f", x, y,yaw);
 
-        // ��λ����Ϣ������ROS������
         waterplus_map_tools::positionMsg position_msg;
         position_msg.x = x;
         position_msg.y = y;
-        position_msg.w = w;
-       // position_pub.publish(position_msg);
+        position_msg.w = yaw;
 
-        // ����ROS Bridge��Ϣ�����͸�Springboot
-        // rosbridge_server::Message bridge_msg;
-        // bridge_msg.op = "publish";
-        // bridge_msg.topic = "/robot_position";
- // ����ROS Bridge��Ϣ
- // ���Զ�����Ϣת��Ϊ�ַ�����JSON��ʽ
-	    // std::stringstream ss;
-	    // ss << "{\"x\":" << position_msg.x << ", \"y\":\"" << position_msg.y <<
-		// 		", \"w\":\"" << position_msg.w << "\"}";
-	    // bridge_msg.msg = ss.str();
-	    ros::Publisher bridge_pub = nh.advertise<waterplus_map_tools::positionMsg>("robot_position", 1);
 	    bridge_pub.publish(position_msg);
-        // ʹ��ROS����������ʵ��ķ�ʽ����bridge_msg��Springboot
+
 
         rate.sleep();
     }

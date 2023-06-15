@@ -173,6 +173,7 @@ void warnsubback(const std_msgs::String::ConstPtr& msg)
     int         ret                  = MSP_SUCCESS;
     const char* session_begin_params = "voice_name = xiaoyan, text_encoding = utf8, sample_rate = 16000, speed = 50, volume = 50, pitch = 50, rdn = 2";
     const char* filename             = "tts_sample.wav"; //合成的语音文件名称
+	std::cout<<msg->data<<std::endl;
 	std::string dataString = msg->data;
 	text = dataString.c_str();
     makespeech(text,filename,session_begin_params);

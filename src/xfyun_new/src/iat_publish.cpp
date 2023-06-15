@@ -328,6 +328,7 @@ int main(int argc, char* argv[])
 			std_msgs::String msg;
 			msg.data = g_result;
 			voiceWordsPub.publish(msg);
+			std::cout<<"i m  in voice sleep"<<std::endl;
 			sleep(10);
 		}
 		ros::spinOnce();

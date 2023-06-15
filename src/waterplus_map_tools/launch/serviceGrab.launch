@@ -1,120 +1,48 @@
 <launch>
 
- <!--- Run Kinect -->
-  <!--************************ kinect ************************-->
-  <arg name="base_name"         default="kinect2"/>
-  <arg name="sensor"            default=""/>
-  <arg name="publish_tf"        default="false"/>
-  <arg name="base_name_tf"      default="$(arg base_name)"/>
-  <arg name="fps_limit"         default="-1.0"/>
-  <arg name="calib_path"        default="$(find kinect2_bridge)/data/"/>
-  <arg name="use_png"           default="false"/>
-  <arg name="jpeg_quality"      default="90"/>
-  <arg name="png_level"         default="1"/>
-  <arg name="depth_method"      default="cpu"/><!--- default/cpu -->
-  <arg name="depth_device"      default="-1"/>
-  <arg name="reg_method"        default="cpu"/>
-  <arg name="reg_device"        default="-1"/>
-  <arg name="max_depth"         default="12.0"/>
-  <arg name="min_depth"         default="0.1"/>
-  <arg name="queue_size"        default="5"/>
-  <arg name="bilateral_filter"  default="true"/>
-  <arg name="edge_aware_filter" default="true"/>
-  <arg name="worker_threads"    default="4"/>
-  <arg name="machine"           default="localhost"/>
-  <arg name="nodelet_manager"   default="$(arg base_name)"/>
-  <arg name="start_manager"     default="true"/>
-  <arg name="use_machine"       default="true"/>
-  <arg name="respawn"           default="true"/>
-  <arg name="use_nodelet"       default="true"/>
-  <arg name="output"            default="log"/>
+ 
 
-  <machine name="localhost" address="localhost" if="$(arg use_machine)"/>
+<!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find wpr_simulation)/worlds/robocup_home.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="recording" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
 
-  <node pkg="nodelet" type="nodelet" name="$(arg nodelet_manager)" args="manager"
-        if="$(arg start_manager)" machine="$(arg machine)" />
+  <!-- Spawn the objects into Gazebo -->
+  <node name="bed" pkg="gazebo_ros" type="spawn_model" args="-file $(find wpr_simulation)/models/bed.model -x 5.0 -y -3.9 -z 0 -Y 3.14159 -urdf -model bed" />
+  <node name="sofa" pkg="gazebo_ros" type="spawn_model" args="-file $(find wpr_simulation)/models/sofa.model -x -1.0 -y -3.9 -z 0 -Y 1.57 -urdf -model sofa" />
+  <node name="tea_table" pkg="gazebo_ros" type="spawn_model" args="-file $(find wpr_simulation)/models/tea_table.model -x -2.1 -y -2.2 -z 0 -Y 1.57 -urdf -model tea_table" />
+  <node name="bookshelft" pkg="gazebo_ros" type="spawn_model" args="-file $(find wpr_simulation)/models/bookshelft.model -x 2.0 -y -0.55 -z 0 -Y -1.57 -urdf -model bookshelft" />
 
-  <!-- Nodelet version of kinect2_bridge -->
-  <node pkg="nodelet" type="nodelet" name="$(arg base_name)_bridge" machine="$(arg machine)"
-        args="load kinect2_bridge/kinect2_bridge_nodelet $(arg nodelet_manager)"
-        respawn="$(arg respawn)" output="$(arg output)" if="$(arg use_nodelet)">
-    <param name="base_name"         type="str"    value="$(arg base_name)"/>
-    <param name="sensor"            type="str"    value="$(arg sensor)"/>
-    <param name="publish_tf"        type="bool"   value="$(arg publish_tf)"/>
-    <param name="base_name_tf"      type="str"    value="$(arg base_name_tf)"/>
-    <param name="fps_limit"         type="double" value="$(arg fps_limit)"/>
-    <param name="calib_path"        type="str"    value="$(arg calib_path)"/>
-    <param name="use_png"           type="bool"   value="$(arg use_png)"/>
-    <param name="jpeg_quality"      type="int"    value="$(arg jpeg_quality)"/>
-    <param name="png_level"         type="int"    value="$(arg png_level)"/>
-    <param name="depth_method"      type="str"    value="$(arg depth_method)"/>
-    <param name="depth_device"      type="int"    value="$(arg depth_device)"/>
-    <param name="reg_method"        type="str"    value="$(arg reg_method)"/>
-    <param name="reg_device"        type="int"    value="$(arg reg_device)"/>
-    <param name="max_depth"         type="double" value="$(arg max_depth)"/>
-    <param name="min_depth"         type="double" value="$(arg min_depth)"/>
-    <param name="queue_size"        type="int"    value="$(arg queue_size)"/>
-    <param name="bilateral_filter"  type="bool"   value="$(arg bilateral_filter)"/>
-    <param name="edge_aware_filter" type="bool"   value="$(arg edge_aware_filter)"/>
-    <param name="worker_threads"    type="int"    value="$(arg worker_threads)"/>
-  </node>
+  <node name="kitchen_table" pkg="gazebo_ros" type="spawn_model" args="-file $(find wpr_simulation)/models/table.model -x -3.5 -y 3.7 -z 0 -Y 1.57 -urdf -model kitchen_table" /> 
+  <node name="red_bottle" pkg="gazebo_ros" type="spawn_model" args="-file $(find wpr_simulation)/models/bottles/red_bottle.model -x -3.3 -y 3.6 -z 2.0 -Y 1.57 -urdf -model red_bottle" />
+  <node name="green_bottle" pkg="gazebo_ros" type="spawn_model" args="-file $(find wpr_simulation)/models/bottles/green_bottle.model -x -3.7 -y 3.6 -z 2.0 -Y 1.57 -urdf -model green_bottle" />
+  <node name="kai_standing" pkg="gazebo_ros" type="spawn_model" args="-file $(find wpr_simulation)/models/kai_standing.model -x -2 -y -0 -z 0 -Y 1.57 -urdf -model kai_standing"/>
 
-  <!-- Node version of kinect2_bridge -->
-  <node pkg="kinect2_bridge" type="kinect2_bridge" name="$(arg base_name)_bridge" machine="$(arg machine)"
-        respawn="$(arg respawn)" output="$(arg output)" unless="$(arg use_nodelet)">
-    <param name="base_name"         type="str"    value="$(arg base_name)"/>
-    <param name="sensor"            type="str"    value="$(arg sensor)"/>
-    <param name="publish_tf"        type="bool"   value="$(arg publish_tf)"/>
-    <param name="base_name_tf"      type="str"    value="$(arg base_name_tf)"/>
-    <param name="fps_limit"         type="double" value="$(arg fps_limit)"/>
-    <param name="calib_path"        type="str"    value="$(arg calib_path)"/>
-    <param name="use_png"           type="bool"   value="$(arg use_png)"/>
-    <param name="jpeg_quality"      type="int"    value="$(arg jpeg_quality)"/>
-    <param name="png_level"         type="int"    value="$(arg png_level)"/>
-    <param name="depth_method"      type="str"    value="$(arg depth_method)"/>
-    <param name="depth_device"      type="int"    value="$(arg depth_device)"/>
-    <param name="reg_method"        type="str"    value="$(arg reg_method)"/>
-    <param name="reg_device"        type="int"    value="$(arg reg_device)"/>
-    <param name="max_depth"         type="double" value="$(arg max_depth)"/>
-    <param name="min_depth"         type="double" value="$(arg min_depth)"/>
-    <param name="queue_size"        type="int"    value="$(arg queue_size)"/>
-    <param name="bilateral_filter"  type="bool"   value="$(arg bilateral_filter)"/>
-    <param name="edge_aware_filter" type="bool"   value="$(arg edge_aware_filter)"/>
-    <param name="worker_threads"    type="int"    value="$(arg worker_threads)"/>
-  </node>
+  <node name="cupboard_0" pkg="gazebo_ros" type="spawn_model" args="-file $(find wpr_simulation)/models/cupboard.model -x -2.0 -y 0.7 -z 0 -Y 1.57 -urdf -model cupboard_0" />
+  <node name="cupboard_1" pkg="gazebo_ros" type="spawn_model" args="-file $(find wpr_simulation)/models/cupboard.model -x -1.3 -y 3.7 -z 0 -Y -1.57 -urdf -model cupboard_1" /> 
 
-  <!-- sd point cloud (512 x 424) -->
-  <node pkg="nodelet" type="nodelet" name="$(arg base_name)_points_xyzrgb_sd" machine="$(arg machine)"
-        args="load depth_image_proc/point_cloud_xyzrgb $(arg nodelet_manager)" respawn="$(arg respawn)">
-    <remap from="rgb/camera_info"             to="$(arg base_name)/sd/camera_info"/>
-    <remap from="rgb/image_rect_color"        to="$(arg base_name)/sd/image_color_rect"/>
-    <remap from="depth_registered/image_rect" to="$(arg base_name)/sd/image_depth_rect"/>
-    <remap from="depth_registered/points"     to="$(arg base_name)/sd/points"/>
-    <param name="queue_size" type="int" value="$(arg queue_size)"/>
-  </node>
+  <node name="dinning_table_0" pkg="gazebo_ros" type="spawn_model" args="-file $(find wpr_simulation)/models/table.model -x 1.5 -y 1.5 -z 0 -Y 1.57 -urdf -model dinning_table_0" />
+  <node name="dinning_table_1" pkg="gazebo_ros" type="spawn_model" args="-file $(find wpr_simulation)/models/table.model -x 1.5 -y 2.0 -z 0 -Y 1.57 -urdf -model dinning_table_1" />
+  <node name="dinning_table_2" pkg="gazebo_ros" type="spawn_model" args="-file $(find wpr_simulation)/models/table.model -x 2.7 -y 1.5 -z 0 -Y 1.57 -urdf -model dinning_table_2" />
+  <node name="dinning_table_3" pkg="gazebo_ros" type="spawn_model" args="-file $(find wpr_simulation)/models/table.model -x 2.7 -y 2.0 -z 0 -Y 1.57 -urdf -model dinning_table_3" />
 
- <!-- Run wpb_home core -->
-  <node pkg="wpb_home_bringup" type="wpb_home_core" name="wpb_home_core" output="screen">
-    <param name="serial_port" type="string" value="/dev/ftdi"/> 
-    <rosparam file="$(find wpb_home_bringup)/config/wpb_home.yaml" command="load" />
-  </node>
+  <node name="chair_0" pkg="gazebo_ros" type="spawn_model" args="-file $(find wpr_simulation)/models/chair.model -x 1.5 -y 1.2 -z 0 -Y 1.57 -urdf -model chair_0" />
+  <node name="chair_1" pkg="gazebo_ros" type="spawn_model" args="-file $(find wpr_simulation)/models/chair.model -x 1.5 -y 2.3 -z 0 -Y -1.57 -urdf -model chair_1" />
+  <node name="chair_2" pkg="gazebo_ros" type="spawn_model" args="-file $(find wpr_simulation)/models/chair.model -x 2.7 -y 1.2 -z 0 -Y 1.57 -urdf -model chair_2" />
+  <node name="chair_3" pkg="gazebo_ros" type="spawn_model" args="-file $(find wpr_simulation)/models/chair.model -x 2.7 -y 2.3 -z 0 -Y -1.57 -urdf -model chair_3" />
 
-  <!--- Run Rplidar -->
-  <node name="rplidarNode"          pkg="rplidar_ros"  type="rplidarNode" output="screen">
-    <param name="serial_port"         type="string" value="/dev/rplidar"/>  
-    <param name="serial_baudrate"     type="int"    value="115200"/>
-    <param name="frame_id"            type="string" value="laser"/>
-    <param name="inverted"            type="bool"   value="false"/>
-    <param name="angle_compensate"    type="bool"   value="true"/>
-    <remap from="scan" to="scan_raw"/>
-  </node>
-    
-  <!-- Run lidar filter -->
-  <node pkg="wpb_home_bringup" type="wpb_home_lidar_filter" name="wpb_home_lidar_filter">
-    <param name="pub_topic" value="/scan"/>
-  </node>
+  <!-- Spawn a robot into Gazebo -->
+  <!-- <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-file $(find wpr_simulation)/models/wpb_home.model -urdf -x -6.0 -y -0.5 -model wpb_home" /> -->
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-file $(find wpr_simulation)/models/wpb_home_mani.model -urdf -x 0 -y 0 -z 0 -Y 0 -model wpb_home_mani" />
 
-
+    <!-- load the controllers of WPB_HOME -->
+  <include file="$(find wpr_simulation)/launch/wpb_home_controllers.launch"/>
+  
   
   <!-- Run the map server -->
   <node name="map_server" pkg="map_server" type="map_server" args="$(arg mapYaml)"/>
@@ -165,9 +93,9 @@
   </node>
 
   <!-- Map tools  -->
-  <node pkg="waterplus_map_tools" type="wp_manager" name="wp_manager" output="screen">
-    <param name="load" type="string" value="$(arg indexPath)"/> 
-  </node>
+<!--   <node pkg="waterplus_map_tools" type="wp_manager" name="wp_manager" output="screen"> -->
+<!--     <param name="load" type="string" value="$(arg indexPath)"/>  -->
+<!--   </node> -->
 
   <!-- WP_navi_server  -->
   <node pkg="waterplus_map_tools" type="wp_navi_server" name="wp_navi_server" output="screen"/>
@@ -175,7 +103,11 @@
 
   <!-- nav-test -->
   <node pkg="waterplus_map_tools" type="service_grab" name="service_grab" output="screen">
-    <param name="src" type="string" value="$(arg src)"/>
+    <param name="srcX" type="double" value="$(arg srcX)"/>
+    <param name="srcY" type="double" value="$(arg srcY)"/>
+    <param name="srcW" type="double" value="$(arg srcW)"/>
   </node>
 
+  <node pkg="xfyun_new" type="warning_broadcast" name="simpleWarning" output="screen"/>
+  <node name="soundplay_node" pkg="sound_play" type="soundplay_node.py"/>
 </launch>

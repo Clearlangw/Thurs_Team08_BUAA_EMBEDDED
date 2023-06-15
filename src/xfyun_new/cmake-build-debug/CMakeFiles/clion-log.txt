@@ -1,4 +1,4 @@
-"C:\Program Files\JetBrains\CLion 2020.3.3\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" F:\xfyun_new
+"C:\Program Files\JetBrains\CLion 2020.3.3\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" F:\611ros\src\xfyun_new
 -- The C compiler identification is GNU 8.1.0
 -- The CXX compiler identification is GNU 8.1.0
 -- Check for working C compiler: C:/x86_64-8.1.0-release-posix-seh-rt_v6-rev0/mingw64/bin/gcc.exe
@@ -31,4 +31,4 @@ CMake Error at CMakeLists.txt:10 (find_package):
 
 
 -- Configuring incomplete, errors occurred!
-See also "F:/xfyun_new/cmake-build-debug/CMakeFiles/CMakeOutput.log".
+See also "F:/611ros/src/xfyun_new/cmake-build-debug/CMakeFiles/CMakeOutput.log".

@@ -49,9 +49,14 @@
 
 void mainCallback(const std_msgs::String::ConstPtr& msg){
     std::string data = msg->data+"&";
+    std::string alive="keepalive&";
     std::cout << data << std::endl;
    const  char* command = data.data();
-    system(command);
+   if(data.compare(alive)!=0){
+       //int ans = data.compare(alive);
+      // system(&ans);
+         system(command);
+   }
 }
 
 int main(int argc, char** argv)

@@ -210,9 +210,13 @@ void makespeech(const char* text,const char* filename, const char* session_begin
 	sp.sound = sound_play::SoundRequest::PLAY_FILE;
 	sp.command = sound_play::SoundRequest::PLAY_ONCE;
 	sp.volume = 100.0;
+	printf("i wanna sleep");
+	std::cout<<"i m going to publish voice"<<std::endl;
 	sp.arg = "tts_sample.wav";
 	play_pub.publish(sp);
 	sleep(1);
+	printf("i wake");
+	std::cout<<"i fin pub"<<std::endl;
 }
 
 void waitForBack(){
@@ -266,10 +270,11 @@ void voiceWordsCallback(const std_msgs::String::ConstPtr& msg)
 
 	if(voice_state == VOICE_TASK_DOING){
 		waitForBack();
-		if(done_flag == true){
-			voice_state = VOICE_LISTEN;
-			done_flag = false;
-		}
+        voice_state = VOICE_LISTEN;
+//		if(done_flag == true){
+//			voice_state = VOICE_LISTEN;
+//			done_flag = false;
+//		}
 	}
 
 	else if(voice_state == VOICE_LISTEN){
@@ -611,8 +616,18 @@ void voiceWordsCallback(const std_msgs::String::ConstPtr& msg)
 		bt.state = VOICE_TASK_DOING;
 		bt.content = "ADD";
 		back_pub.publish(bt);
-		voice_state = VOICE_TASK_DOING;
-        waitback = 1;
+        waitForBack();
+        text = backtext.c_str();
+        cout<<text<<endl;
+        makespeech(text,filename,session_begin_params);
+        std::string txt(text);
+        if(txt.find("冲突") != std::string::npos){
+            voice_state = VOICE_LISTEN;
+        }else{
+            voice_state = VOICE_LISTEN;
+          //  waitback = 1;
+        }
+
 	}else if(voice_state == VOICE_TASK_OFF){
 		xfyun_new::bridgeToBack bt;
 		bt.state = VOICE_TASK_OFF;
